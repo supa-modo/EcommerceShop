@@ -1,4 +1,3 @@
-const dbConnect = require("../config/dbConnect");
 const User = require("../models/userModel");
 
 const createUser = async (req, res) => {
