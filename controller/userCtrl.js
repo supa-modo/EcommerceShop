@@ -1,24 +1,9 @@
-// const User = require("../models/userModel");
-
-// const createUser = async (req, res) => {
-//   const email = req.body.email;
-//   const findUser = await User.findOne({ email: email });
-//   if (!findUser) {
-//     // Create a new user
-//     const newUser = await User.create(req.body);
-//     res.json({ message: "User created successfully", user: newUser });
-//   } else {
-//     res.json({ message: "User with this email or mobile already exists." });
-//   }
-// };
-
-// module.exports = { createUser };
-// userCtrl.js
+const { generateToken } = require("../config/jwtToken");
 const User = require("../models/userModel");
 const asyncHandler = require("express-async-handler");
 
+//Register a User function
 const createUser = asyncHandler(async (req, res) => {
-  // try {
   const { firstname, lastname, email, mobile, password } = req.body;
 
   // Check if the user with the provided email or mobile already exists
@@ -44,16 +29,75 @@ const createUser = asyncHandler(async (req, res) => {
       .status(201)
       .json({ message: "User created successfully", user: newUser });
   }
-
-  // } catch (error) {
-  //   console.error("Error creating user:", error.message);
-  //   res.status(500).send("Internal Server Error");
-  // }
 });
 
+// Log in a User function
 const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
-  console.log(email, password);
+  // Find the user by email
+  const user = await User.findOne({ email });
+
+  //checking if passwords match if user is found
+  if (user && (await user.isPasswordMatched(password))) {
+    res.json({
+      _id: user?.id,
+      firstname: user?.firstname,
+      lastname: user?.lastname,
+      email: user?.email,
+      mobile: user?.mobile,
+      token: generateToken(user?.id),
+    });
+  } else {
+    throw new Error("Invalid email or password");
+  }
 });
 
-module.exports = { createUser, loginUser };
+//Updating a User
+const updateUser = asyncHandler(async (req, res) => {
+  const userId = req.params.id; // Assuming the user ID is passed as a route parameter
+  const updatedData = req.body;
+
+  const updatedUser = await User.findOneAndUpdate(
+    { _id: userId },
+    updatedData,
+    { new: true, runValidators: true }
+  );
+  if (!updatedUser) {
+    throw new Error("User not found");
+  }
+  res.json({ message: "User updated successfully", user: updatedUser });
+});
+
+//Get all Users Function
+const getAllUsers = asyncHandler(async (req, res) => {
+  try {
+    const getUsers = await User.find();
+    res.json(getUsers);
+  } catch (error) {
+    throw new Error(error);
+  }
+});
+
+//Get a single User
+const getaUser = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  try {
+    const getaUser = await User.findById(id);
+    res.json({ getaUser });
+  } catch (error) {
+    throw new Error(error);
+  }
+});
+
+//Delete a User
+const deleteaUser = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  try {
+    const deleteaUser = await User.findByIdAndDelete(id);
+    res.json({ deleteaUser });
+  } catch (error) {
+    throw new Error(error);
+  }
+});
+
+module.exports = { createUser, loginUser, updateUser, getAllUsers, getaUser, deleteaUser };
