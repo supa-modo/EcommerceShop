@@ -7,12 +7,13 @@ const {
   deleteaUser,
   updateUser,
 } = require("../controller/userCtrl");
+const { authMiddleware } = require("../middleware/authMiddleware");
 const router = express.Router();
 
 router.post("/register", createUser);
 router.post("/login", loginUser);
 router.get("/allUsers", getAllUsers);
-router.get("/:id", getaUser);
+router.get("/:id", authMiddleware, getaUser);
 router.delete("/:id", deleteaUser);
 router.put("/:id", updateUser);
 
