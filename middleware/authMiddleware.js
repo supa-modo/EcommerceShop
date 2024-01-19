@@ -1,5 +1,4 @@
-//Middleware to check if the user is an admin or not
-
+//Generating and verifying tokens for authorizations
 const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 const asyncHandler = require("express-async-handler");
@@ -23,4 +22,15 @@ const authMiddleware = asyncHandler(async (req, res, next) => {
   }
 });
 
-module.exports = { authMiddleware };
+//Checking if the user is an admin or not
+const isAdmin = asyncHandler(async (req, res, next) => {
+  const { email } = req.user;
+  const adminUser = await User.findOne({ email });
+  if (adminUser.userRole !== "Admin") {
+    throw new Error("You are not an admin");
+  } else {
+    next();
+  }
+});
+
+module.exports = { authMiddleware, isAdmin };

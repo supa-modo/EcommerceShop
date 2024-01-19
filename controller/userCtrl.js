@@ -54,7 +54,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
 //Updating a User
 const updateUser = asyncHandler(async (req, res) => {
-  const userId = req.params.id; // Assuming the user ID is passed as a route parameter
+  const userId = req.user.id; // Assuming the user ID is passed as a route parameter
   const updatedData = req.body;
 
   const updatedUser = await User.findOneAndUpdate(
@@ -100,4 +100,27 @@ const deleteaUser = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { createUser, loginUser, updateUser, getAllUsers, getaUser, deleteaUser };
+const blockUser = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+   try {
+    const block = User.findByIdAndUpdate(
+      id, {isBlocked: true,},
+      
+    )
+  } catch (error) {
+    throw new Error(error)
+  }
+});
+
+const unBlockUser = asyncHandler(async (req, res) => {});
+
+module.exports = {
+  createUser,
+  loginUser,
+  updateUser,
+  getAllUsers,
+  getaUser,
+  deleteaUser,
+  blockUser,
+  unBlockUser,
+};
