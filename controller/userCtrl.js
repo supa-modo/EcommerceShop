@@ -2,7 +2,9 @@ const { generateToken } = require("../config/jwtToken");
 const User = require("../models/userModel");
 const asyncHandler = require("express-async-handler");
 const validateMongodbId = require("../utils/validateMongodbId");
+const { generateRefreshToken } = require("../config/refreshToken");
 
+generateRefreshToken;
 //Register a User function
 const createUser = asyncHandler(async (req, res) => {
   const { firstname, lastname, email, mobile, password } = req.body;
@@ -40,6 +42,18 @@ const loginUser = asyncHandler(async (req, res) => {
 
   //checking if passwords match if user is found
   if (user && (await user.isPasswordMatched(password))) {
+    // const refreshToken = await generateRefreshToken(user?._id);
+    // const updateUserData = await User.findByIdAndUpdate(
+    //   user.id,
+    //   {
+    //     refreshToken: refreshToken,
+    //   },
+    //   { new: true }
+    // );
+    // res.cookie("refreshToken", refreshToken, {
+    //   httpOnly: true,
+    //   maxAge: 72 * 60 * 60 * 1000,
+    // });
     res.json({
       _id: user?.id,
       firstname: user?.firstname,

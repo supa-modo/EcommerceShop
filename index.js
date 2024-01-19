@@ -5,9 +5,11 @@ const dotenv = require("dotenv").config();
 const PORT = process.env.PORT || 4000;
 const authRouter = require("./routes/authRoutes");
 const { notFound, errorHandler } = require("./middleware/errorHandler");
+const cookieParser = require("cookie-parser");
 
 // Middleware to parse JSON in the request body
 app.use(express.json());
+app.use(cookieParser);
 
 //Connecting to MongoDB
 dbConnect();
