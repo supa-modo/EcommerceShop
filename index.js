@@ -9,11 +9,11 @@ const cookieParser = require("cookie-parser");
 
 // Middleware to parse JSON in the request body
 app.use(express.json());
-app.use(cookieParser);
 
 //Connecting to MongoDB
 dbConnect();
 
+app.use(cookieParser);
 // Use the authRouter for '/api/user' routes
 app.use("/api/user", authRouter);
 

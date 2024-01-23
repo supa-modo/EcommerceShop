@@ -35,7 +35,7 @@ var userSchema = new mongoose.Schema(
 
     isBlocked: {
       type: Boolean,
-      default: false
+      default: false,
     },
     cart: {
       type: Array,

@@ -4,7 +4,6 @@ const asyncHandler = require("express-async-handler");
 const validateMongodbId = require("../utils/validateMongodbId");
 const { generateRefreshToken } = require("../config/refreshToken");
 
-generateRefreshToken;
 //Register a User function
 const createUser = asyncHandler(async (req, res) => {
   const { firstname, lastname, email, mobile, password } = req.body;
