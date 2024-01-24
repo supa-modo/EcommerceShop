@@ -2,7 +2,7 @@ const { generateToken } = require("../config/jwtToken");
 const User = require("../models/userModel");
 const asyncHandler = require("express-async-handler");
 const validateMongodbId = require("../utils/validateMongodbId");
-const { generateRefreshToken } = require("../config/refreshToken");
+// const { generateRefreshToken } = require("../config/refreshToken");
 
 //Register a User function
 const createUser = asyncHandler(async (req, res) => {
@@ -10,8 +10,8 @@ const createUser = asyncHandler(async (req, res) => {
 
   // Check if the user with the provided email or mobile already exists
   const existingUser = await User.findOne({ $or: [{ email }, { mobile }] });
-
   if (existingUser) {
+
     // return res.status(400).json({ message: "User with this email or mobile already exists." });
     throw new Error("User Already exists");
   } else {
@@ -41,18 +41,8 @@ const loginUser = asyncHandler(async (req, res) => {
 
   //checking if passwords match if user is found
   if (user && (await user.isPasswordMatched(password))) {
-    // const refreshToken = await generateRefreshToken(user?._id);
-    // const updateUserData = await User.findByIdAndUpdate(
-    //   user.id,
-    //   {
-    //     refreshToken: refreshToken,
-    //   },
-    //   { new: true }
-    // );
-    // res.cookie("refreshToken", refreshToken, {
-    //   httpOnly: true,
-    //   maxAge: 72 * 60 * 60 * 1000,
-    // });
+    // const refreshToken = await generateRefreshToken(user?.id);
+    // user.refreshToken = refreshToken;
     res.json({
       _id: user?.id,
       firstname: user?.firstname,
@@ -60,11 +50,27 @@ const loginUser = asyncHandler(async (req, res) => {
       email: user?.email,
       mobile: user?.mobile,
       token: generateToken(user?.id),
+      // refreshToken,
     });
   } else {
     throw new Error("Invalid email or password");
   }
 });
+
+// //Refreshing the user access token
+// const refreshAccessToken = asyncHandler(async (req, res) => {
+//   const { refreshToken } = req.body;
+
+//   // Find the user by the refresh token
+//   const user = await User.findOne({ refreshToken });
+
+//   if (!user) {
+//     throw new Error("Invalid refresh token");
+//   }
+//   // Generate a new access token
+//   const accessToken = generateToken(user.id);
+//   res.json({ accessToken });
+// });
 
 //Updating a User
 const updateUser = asyncHandler(async (req, res) => {
@@ -152,6 +158,7 @@ const unblockUser = asyncHandler(async (req, res) => {
 module.exports = {
   createUser,
   loginUser,
+  // refreshAccessToken,
   updateUser,
   getAllUsers,
   getaUser,
