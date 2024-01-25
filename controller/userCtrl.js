@@ -11,7 +11,6 @@ const createUser = asyncHandler(async (req, res) => {
   // Check if the user with the provided email or mobile already exists
   const existingUser = await User.findOne({ $or: [{ email }, { mobile }] });
   if (existingUser) {
-
     // return res.status(400).json({ message: "User with this email or mobile already exists." });
     throw new Error("User Already exists");
   } else {
@@ -71,6 +70,13 @@ const loginUser = asyncHandler(async (req, res) => {
 //   const accessToken = generateToken(user.id);
 //   res.json({ accessToken });
 // });
+
+//TODO - Add a refresh token functionality that stores the token aas cookies to identify user on next login
+
+//Log out functionality
+const logout = asyncHandler(async (req, res) => {
+  //TODO - Implement a logout function that clears login token from the saved cookies
+});
 
 //Updating a User
 const updateUser = asyncHandler(async (req, res) => {
@@ -158,6 +164,7 @@ const unblockUser = asyncHandler(async (req, res) => {
 module.exports = {
   createUser,
   loginUser,
+  logout,
   // refreshAccessToken,
   updateUser,
   getAllUsers,
