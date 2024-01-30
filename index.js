@@ -6,6 +6,7 @@ const PORT = process.env.PORT || 4000;
 const authRouter = require("./routes/authRoutes");
 const productRouter = require("./routes/productRoute");
 const { notFound, errorHandler } = require("./middleware/errorHandler");
+const morgan = require("morgan");
 
 // Middleware to parse JSON in the request body
 app.use(express.json());
@@ -13,6 +14,7 @@ app.use(express.json());
 //Connecting to MongoDB
 dbConnect();
 
+app.use(morgan());
 app.use("/api/user", authRouter); // Use the authRouter for '/api/user' routes
 app.use("/api/product", productRouter); // Use the productRouter for '/api/product' routes
 

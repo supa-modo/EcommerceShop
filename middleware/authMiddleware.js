@@ -20,7 +20,21 @@ const authMiddleware = asyncHandler(async (req, res, next) => {
   } else {
     throw new Error("There is no token to attach to header");
   }
+// const authMiddleware = async (req, res, next) => {
+//   const token = req.header('Authorization').replace('Bearer ', '');
+//   const decoded = jwt.verify(token, process.env.JWT_SECRETKEY);
+//   const user = await User.findOne({ _id: decoded.id, 'tokens.token': token });
+
+//   if (!user) {
+//     throw new Error('User not found');
+//   }
+
+//   req.user = user;
+//   req.token = token;
+//   next();
+// };
 });
+
 
 //Checking if the user is an admin or not
 const isAdmin = asyncHandler(async (req, res, next) => {
