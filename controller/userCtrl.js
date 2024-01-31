@@ -1,5 +1,6 @@
 const { generateToken } = require("../config/jwtToken");
 const User = require("../models/userModel");
+const bcrypt = require("bcrypt");
 const asyncHandler = require("express-async-handler");
 const validateMongodbId = require("../utils/validateMongodbId");
 // const { generateRefreshToken } = require("../config/refreshToken");
@@ -52,7 +53,7 @@ const loginUser = asyncHandler(async (req, res) => {
       // refreshToken,
     });
   } else {
-    throw new Error("Invalid email or password");
+    throw new Error("Invalid Login credentials");
   }
 });
 
@@ -71,7 +72,7 @@ const loginUser = asyncHandler(async (req, res) => {
 //   res.json({ accessToken });
 // });
 
-//TODO - Add a refresh token functionality that stores the token aas cookies to identify user on next login
+//TODO - Add a refresh token functionality that stores the token as cookies to identify user on next login
 
 //Log out functionality
 const logout = asyncHandler(async (req, res) => {
@@ -161,6 +162,26 @@ const unblockUser = asyncHandler(async (req, res) => {
   res.json({ message: "User unblocked successfully", user });
 });
 
+const updatePassword = asyncHandler(async (req, res) => {
+  const { _id } = req.user;
+  const { password } = req.body; // Extract the password from the request body
+  validateMongodbId(_id);
+  const user = await User.findById(_id);
+
+  if (password) {
+    user.password = password;
+    // Update the passwordChangedAt field to the current date and time
+    user.passwordChangedAt = new Date();
+
+    const updatedPassword = await user.save();
+    res.json(updatedPassword);
+  } else {
+    res.json(user);
+  }
+});
+
+
+
 module.exports = {
   createUser,
   loginUser,
@@ -172,4 +193,5 @@ module.exports = {
   deleteaUser,
   blockUser,
   unblockUser,
+  updatePassword,
 };
