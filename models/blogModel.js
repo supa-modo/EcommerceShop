@@ -29,7 +29,7 @@ var blogSchema = new mongoose.Schema({
   likes: {
     type: mongoose.Schema.Types.ObjectId,
   },
-  likes: {
+  dislikes: {
     type: mongoose.Schema.Types.ObjectId,
   },
   image: {
