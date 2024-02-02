@@ -5,6 +5,7 @@ const dotenv = require("dotenv").config();
 const PORT = process.env.PORT || 4000;
 const authRouter = require("./routes/authRoutes");
 const productRouter = require("./routes/productRoute");
+const blogRouter = require("./routes/blogRoutes");
 const { notFound, errorHandler } = require("./middleware/errorHandler");
 const morgan = require("morgan");
 
@@ -17,6 +18,7 @@ dbConnect();
 app.use(morgan());
 app.use("/api/user", authRouter); // Use the authRouter for '/api/user' routes
 app.use("/api/product", productRouter); // Use the productRouter for '/api/product' routes
+app.use("/api/blog", blogRouter); // Use the productRouter for '/api/product' routes
 
 //Handling scenarios where a route is not found or when an error occurs
 app.use(notFound);
