@@ -19,7 +19,7 @@ const createBlog = asyncHandler(async (req, res) => {
 //Updating an existing blog
 const updateBlog = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  validateMongodbId();
+  validateMongodbId(id);
   try {
     const updateBlog = await Blog.findByIdAndUpdate(id, req.body, {
       new: true,
@@ -36,7 +36,7 @@ const updateBlog = asyncHandler(async (req, res) => {
 //Getting a single blog
 const getaBlog = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  validateMongodbId();
+  validateMongodbId(id);
   try {
     const getaBlog = await Blog.findById(id);
     await Blog.findByIdAndUpdate(
@@ -70,7 +70,7 @@ const getAllBlogs = asyncHandler(async (req, res) => {
 //Deleting an existing blog
 const deleteBlog = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  validateMongodbId();
+  validateMongodbId(id);
 
   try {
     const deletedBlog = await Blog.findByIdAndDelete(id, req.body);
@@ -85,17 +85,16 @@ const deleteBlog = asyncHandler(async (req, res) => {
 
 const likeBlog = asyncHandler(async (req, res) => {
   const { blogId } = req.body;
-  validateMongodbId();
+  validateMongodbId(blogId);
 
   //Find the blog to like
   const blog = await Blog.findById(blogId);
   const loginUserId = req?.user?._id;
 
   const isLiked = blog?.isLiked;
-
   //find if user disliked the blog
   const alreadyDisliked = blog?.dislikes?.find(
-    (userId = userId?.toString() == loginUserId.toString())
+    (userId) => userId?.toString() === loginUserId?.toString()
   );
   if (alreadyDisliked) {
     const blog = await Blog.findByIdAndUpdate(
