@@ -27,12 +27,14 @@ var blogSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    likes: {
+    likes: [{
       type: mongoose.Schema.Types.ObjectId,
-    },
-    dislikes: {
+      ref: 'User'
+    }],
+    dislikes: [{
       type: mongoose.Schema.Types.ObjectId,
-    },
+      ref: 'User'
+    }],
     image: {
       type: String,
       default: "https://knilt.arcc.albany.edu/images/0/0f/Aablog.jpg",
