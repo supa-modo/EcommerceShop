@@ -1,14 +1,14 @@
-const Category = require("../models/prodCategoryModel");
+const PCategory = require("../models/prodCategoryModel");
 const asyncHandler = require("express-async-handler");
 const validateMongodbId = require("../utils/validateMongodbId");
 
-const createCategory = asyncHandler(async (req, res) => {
+const createPCategory = asyncHandler(async (req, res) => {
   try {
-    const newCategory = await Category.create(req.body);
-    res.json(newCategory);
+    const newPCategory = await PCategory.create(req.body);
+    res.json(newPCategory);
   } catch (error) {
     throw new Error(error);
   }
 });
 
-module.exports = { createCategory };
+module.exports = { createPCategory };
